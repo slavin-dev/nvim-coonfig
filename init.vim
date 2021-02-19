@@ -234,6 +234,7 @@ nmap <silent> <A-Right> :wincmd l<CR>
 autocmd BufWritePost * GitGutter
 
 nnoremap <leader>god :Gvdiffsplit!<CR>
+nnoremap <leader>gos :Gstatus<CR>
 nnoremap <leader>gmt :G mergetool<CR>
 nnoremap gdl :diffget //2<CR>
 nnoremap gdr :diffget //3<CR>
