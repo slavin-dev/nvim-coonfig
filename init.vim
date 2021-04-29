@@ -3,7 +3,8 @@ filetype off
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'sheerun/vim-polyglot'
-Plug 'dracula/vim'
+" Plug 'joshdick/onedark.vim'
+Plug 'morhetz/gruvbox'
 " Git tools
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -27,8 +28,11 @@ Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-solargraph', {'do': 'yarn install --frozen-lockfile'}
+Plug 'fannheyward/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile'}
 Plug 'iamcco/coc-diagnostic', {'do': 'yarn install --frozen-lockfile'}
-
+Plug 'fannheyward/coc-styled-components', {'do': 'yarn install --frozen-lockfile'}
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
@@ -55,13 +59,13 @@ set clipboard=unnamedplus
 set colorcolumn=120
 set background=dark
 
-colorscheme dracula
+colorscheme gruvbox
 set number
 set nowrap
 set smartcase
 set hlsearch
 set noerrorbells
-set softtabstop=4 tabstop=8 shiftwidth=4
+set softtabstop=2 tabstop=4 shiftwidth=2
 set expandtab
 set smartindent
 set viminfo='20,<1000
@@ -88,6 +92,8 @@ map <Space> <Leader>
 
 command! CopyBuffer let @+ = expand('%:p')
 
+nnoremap <c-k> :<c-u>call search('\u')<cr>
+
 nnoremap <S-Up> :m-2<CR>
 nnoremap <S-Down> :m+<CR>
 inoremap <S-Up> <Esc>:m-2<CR>
@@ -101,7 +107,10 @@ nnoremap <C-S-Down> :resize -10<CR>
 map <C-d> 5j
 map <C-u> 5k
 
-xnoremap p "_dP
+" xnoremap p "0p
+
+map <F1> <Esc>
+imap <F1> <Esc>
 
 function TrimWhiteSpace()
   %s/\s*$//
@@ -109,6 +118,21 @@ function TrimWhiteSpace()
 endfunction
 
 command Dels :call TrimWhiteSpace()
+
+" NerdTree
+
+function! NERDTreeYankCurrentNode()
+    let n = g:NERDTreeFileNode.GetSelected()
+    if n != {}
+        return n.path.getLastPathComponent(1)
+    endif
+endfunction
+
+command! CopyName let @+ = NERDTreeYankCurrentNode()
+
+
+" Extensions
+au BufRead,BufNewFile *.ftl setfiletype html
 
 " Emmet
  let g:user_emmet_settings = {
@@ -136,6 +160,20 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
+nnoremap <silent> h :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " COC eslint
 command! -nargs=0 Esfix :call CocAction('runCommand', 'eslint.executeAutofix')
@@ -252,6 +290,9 @@ nnoremap <leader>gdo :Gdiffoff<CR>
 """ Auto pairs
 let g:AutoPairsFlyMode = 0
 
+
+" Complete
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Easy motion
 map <Leader> <Plug>(easymotion-prefix)

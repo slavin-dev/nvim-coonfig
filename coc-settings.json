@@ -1,0 +1,4 @@
+{
+    "suggest.triggerAfterInsertEnter": false,
+    "tsserver.log": "verbose"
+}
