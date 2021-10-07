@@ -3,8 +3,8 @@ filetype off
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'sheerun/vim-polyglot'
-" Plug 'joshdick/onedark.vim'
-Plug 'morhetz/gruvbox'
+Plug 'joshdick/onedark.vim'
+" Plug 'morhetz/gruvbox'
 " Git tools
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -30,6 +30,7 @@ Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-solargraph', {'do': 'yarn install --frozen-lockfile'}
+Plug 'josa42/coc-go', {'do': 'yarn install --frozen-lockfile'}
 Plug 'fannheyward/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile'}
 Plug 'iamcco/coc-diagnostic', {'do': 'yarn install --frozen-lockfile'}
 Plug 'fannheyward/coc-styled-components', {'do': 'yarn install --frozen-lockfile'}
@@ -45,10 +46,18 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-unimpaired'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'elzr/vim-json'
-
+Plug 'vim-test/vim-test'
 Plug 'easymotion/vim-easymotion'
-
 call plug#end()
+
+let g:coc_global_extensions = [
+    \ 'coc-emmet',
+    \ 'coc-diagnostic',
+    \ 'coc-styled-components',
+    \ 'coc-rust-analyzer',
+	\ 'coc-snippets',
+	\ 'coc-tsserver'
+    \ ]
 
 
 let g:python_host_prog = "/usr/bin/python"
@@ -59,7 +68,7 @@ set clipboard=unnamedplus
 set colorcolumn=120
 set background=dark
 
-colorscheme gruvbox
+colorscheme onedark 
 set number
 set nowrap
 set smartcase
@@ -172,6 +181,8 @@ function! s:show_documentation()
 endfunction
 
 
+" COC
+
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
@@ -272,7 +283,7 @@ nmap <silent> <A-Right> :wincmd l<CR>
 autocmd BufWritePost * GitGutter
 
 nnoremap <leader>god :Gvdiffsplit!<CR>
-nnoremap <leader>gos :Gstatus<CR>
+nnoremap <leader>gos :Git<CR>
 nnoremap <leader>gmt :G mergetool<CR>
 nnoremap gdl :diffget //2<CR>
 nnoremap gdr :diffget //3<CR>
@@ -289,7 +300,7 @@ nnoremap <leader>gdo :Gdiffoff<CR>
 
 """ Auto pairs
 let g:AutoPairsFlyMode = 0
-
+let g:AutoPairsMultilineClose = 0
 
 " Complete
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
@@ -302,3 +313,9 @@ hi DiffAdd      ctermfg=NONE ctermbg=Green
 hi DiffChange   ctermfg=NONE ctermbg=NONE
 hi DiffDelete   ctermfg=LightBlue ctermbg=Red
 hi DiffText     ctermfg=Yellow ctermbg=Red
+
+
+" Vim test
+if has('nvim')
+  tmap <C-o> <C-\><C-n>
+endif
