@@ -4,7 +4,7 @@ filetype off
 call plug#begin('~/.config/nvim/plugged')
 Plug 'sheerun/vim-polyglot'
 Plug 'joshdick/onedark.vim'
-" Plug 'morhetz/gruvbox'
+Plug 'sonph/onehalf', { 'rtp': 'vim' }
 " Git tools
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -21,21 +21,24 @@ Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-emmet', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-eslint'
 Plug 'neoclide/coc-tslint', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-tabnine', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-prettier'
+Plug 'yaegassy/coc-intelephense', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-solargraph', {'do': 'yarn install --frozen-lockfile'}
 Plug 'josa42/coc-go', {'do': 'yarn install --frozen-lockfile'}
 Plug 'fannheyward/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile'}
 Plug 'iamcco/coc-diagnostic', {'do': 'yarn install --frozen-lockfile'}
 Plug 'fannheyward/coc-styled-components', {'do': 'yarn install --frozen-lockfile'}
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 Plug 'mattn/emmet-vim'
 Plug 'preservim/nerdcommenter'
@@ -48,10 +51,17 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'elzr/vim-json'
 Plug 'vim-test/vim-test'
 Plug 'easymotion/vim-easymotion'
+Plug 'itchyny/calendar.vim'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+
 call plug#end()
 
 let g:coc_global_extensions = [
     \ 'coc-emmet',
+    \ 'coc-css',
+    \ 'coc-eslint',
     \ 'coc-diagnostic',
     \ 'coc-styled-components',
     \ 'coc-rust-analyzer',
@@ -61,14 +71,27 @@ let g:coc_global_extensions = [
 
 
 let g:python_host_prog = "/usr/bin/python"
-let g:python3_host_prog = "/usr/local/bin/python3"
+let g:python3_host_prog = "/usr/bin/python3"
 
 syntax on
-set clipboard=unnamedplus
-set colorcolumn=120
+
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+" Use 256 colors in gui_running mode
+if !has('gui_running')
+  set t_Co=256
+endif
+
+set cursorline
+colorscheme onedark 
 set background=dark
 
-colorscheme onedark 
+set clipboard=unnamedplus
+set colorcolumn=120
 set number
 set nowrap
 set smartcase
@@ -79,23 +102,22 @@ set expandtab
 set smartindent
 set viminfo='20,<1000
 set grepprg=rg\ --vimgrep\ --smart-case\ --follow
-set cursorline
 set foldmethod=syntax
 set foldnestmax=10
 set nofoldenable
 set foldlevel=20
 set lazyredraw
 set list
-set lcs+=space:·
+set lcs+=space:¬∑
+
+let g:dracula_colorterm = 0
+let g:dracula_italic = 0
 
 if has('persistent_undo')
     set undofile
     silent !mkdir ~/.vim_undo_backup > /dev/null 2>&1
     set undodir=~/.vim_undo_backup
 endif
-
-let $FZF_DEFAULT_OPTS = '--layout=reverse --info=inline'
-let $FZF_DEFAULT_COMMAND="rg --files --hidden"
 
 map <Space> <Leader>
 
@@ -116,7 +138,7 @@ nnoremap <C-S-Down> :resize -10<CR>
 map <C-d> 5j
 map <C-u> 5k
 
-" xnoremap p "0p
+" nnoremap p "0p
 
 map <F1> <Esc>
 imap <F1> <Esc>
@@ -157,17 +179,31 @@ map <silent> <C-n> :NERDTreeFind<CR>
 
 
 " COC
-nnoremap <silent> <leader>i :CocAction<cr>
+" nnoremap <silent> <leader>i :CocAction<cr>
+nmap <leader>i  <Plug>(coc-codeaction)
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <leader>qf  <Plug>(coc-fix-current)
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
+
+" Coc List
+nnoremap <leader>ccd :CocList diagnostics<CR>
+nnoremap <leader>cco :CocList outline<CR>
+
+nmap <leader>e :CocCommand explorer<CR>
+
 
 nnoremap <silent> h :call <SID>show_documentation()<CR>
 function! s:show_documentation()
@@ -193,64 +229,6 @@ command! -nargs=0 Esfix :call CocAction('runCommand', 'eslint.executeAutofix')
 " coc go to next eslint problem
 nmap ]w <Plug>(coc-diagnostic-next)
 nmap [w <Plug>(coc-diagnostic-prev)
-
-" FZF
-nnoremap <silent> <leader>p :Files<cr>
-nnoremap <silent> <leader>g :GFiles<cr>
-nnoremap <silent> <leader>b :Buffers<cr>
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
-
-
-" Get files
-command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
-
-" Get text in files with Rg
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
-
-" Ripgrep advanced
-function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
-  let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
-endfunction
-
-command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
-
-
-if executable('rg')
-  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
-  set grepprg=rg\ --vimgrep
-  command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
-  command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".(<q-args>), 1, fzf#vim#with_preview(), <bang>0)
-  " Rg current word
-  nnoremap <Leader>fw :Rg <C-R><C-W><space>
-endif
-
-
-" Raw version with preview
-command! -bang -nargs=+ -complete=file Ag call fzf#vim#ag_raw(<q-args>, fzf#vim#with_preview(), <bang>0)
-command! -bang -nargs=+ -complete=dir AgIn call s:ag_in(<bang>0, <f-args>)
-
-" AgIn: Start ag in the specified directory
-function! s:ag_in(bang, ...)
-  if !isdirectory(a:1)
-    throw 'not a valid directory: ' .. a:1
-  endif
-  " Press `?' to enable preview window.
-  call fzf#vim#ag(join(a:000[1:], ' '), fzf#vim#with_preview({'dir': a:1}, 'up:50%:hidden', '?'), a:bang)
-
-  " If you don't want preview option, use this
-  " call fzf#vim#ag(join(a:000[1:], ' '), {'dir': a:1}, a:bang)
-endfunction
 
 
 " Nerd Comment
@@ -284,6 +262,7 @@ autocmd BufWritePost * GitGutter
 
 nnoremap <leader>god :Gvdiffsplit!<CR>
 nnoremap <leader>gos :Git<CR>
+nnoremap <leader>gb :Git blame<CR>
 nnoremap <leader>gmt :G mergetool<CR>
 nnoremap gdl :diffget //2<CR>
 nnoremap gdr :diffget //3<CR>
@@ -308,14 +287,58 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR
 " Easy motion
 map <Leader> <Plug>(easymotion-prefix)
 
-" Git conflict marker
-hi DiffAdd      ctermfg=NONE ctermbg=Green
-hi DiffChange   ctermfg=NONE ctermbg=NONE
-hi DiffDelete   ctermfg=LightBlue ctermbg=Red
-hi DiffText     ctermfg=Yellow ctermbg=Red
+
+function! MyHighlights() abort
+    " Define BadWhitespace before using in a match
+    highlight BadWhitespace ctermbg=red guibg=darkred
+
+    " Highlight spelling mistakes in red
+    highlight SpellBad cterm=underline ctermfg=red guifg=red
+
+    " Do not use separate background color in sign column
+    highlight SignColumn guibg=bg
+    highlight SignColumn ctermbg=bg
+
+    " Make background of error signs the same as a regular sign column
+    highlight CocErrorSign guifg=red
+    highlight CocErrorSign guibg=bg
+    highlight CocErrorSign ctermbg=bg
+
+    " Use underlined, bold, green for current tag
+    highlight TagbarHighlight guifg=#b8bb26
+    highlight TagbarHighlight gui=bold,underline
+
+    " Highlight search results in bold green
+    highlight Search guibg=guibg guifg=#b8bb26 gui=bold,underline cterm=bold,underline
+
+    " Try to use more subdued colors in vimdiff mode
+    highlight DiffAdd cterm=bold ctermfg=142 ctermbg=235 gui=NONE guifg=#b8bb26 guibg=#3c3c25
+    highlight DiffChange cterm=bold ctermfg=108 ctermbg=235 gui=NONE guifg=#8ec07c guibg=#383228
+    highlight DiffText cterm=NONE ctermfg=214 ctermbg=235 gui=NONE guifg=#fabd2f guibg=#483D28
+    highlight DiffDelete cterm=bold ctermfg=167 ctermbg=235 gui=NONE guifg=#fb4934 guibg=#372827
+endfunction
+
+augroup MyColors
+    autocmd!
+    autocmd ColorScheme * call MyHighlights()
+augroup END
+
+
+" Airline
+let g:airline_theme='onedark'
 
 
 " Vim test
 if has('nvim')
   tmap <C-o> <C-\><C-n>
 endif
+
+" Telescope
+
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fs <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>p <cmd>Telescope git_files<cr>
+nnoremap <leader>fgb <cmd>Telescope git_branches<cr>
+nnoremap <leader>fgc <cmd>Telescope git_commits<cr>
