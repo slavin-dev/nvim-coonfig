@@ -1,0 +1,6 @@
+require('commands')
+require('plugins')
+require('plugins-configs')
+require('options')
+require('themes')
+require('keymaps')
