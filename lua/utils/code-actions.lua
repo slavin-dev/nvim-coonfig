@@ -1,3 +1,5 @@
+local M = require('utils.mapping')
+
 function _G.show_docs()
   local cw = vim.fn.expand('<cword>')
   if vim.fn.index({'vim', 'help'}, vim.bo.filetype) >= 0 then

@@ -17,10 +17,10 @@ inoremap('<S-Up>', '<Esc>:m-2<CR>')
 inoremap('<S-Down>', '<Esc>:m+<CR>')
 
 -- Move around windows (shifted to the right)
-nmap('<A-left>', ':wincmd h<CR>')
-nmap('<A-right>', ':wincmd l<CR>')
-nmap('<A-top>', ':wincmd k<CR>')
-nmap('<A-bottom>', ':wincmd j<CR>')
+nnoremap('<leader><left>', ':wincmd h<CR>')
+nnoremap('<leader><right>', ':wincmd l<CR>')
+nnoremap('<leader><up>', ':wincmd k<CR>')
+nnoremap('<leader><down>', ':wincmd j<CR>')
 
 -- Resize windows
 nnoremap('<S-Right>', ':vertical resize +10<CR>')
@@ -31,7 +31,6 @@ nnoremap('<C-S-Down>', ':resize -10<CR>')
 -- Jumping
 nmap('<C-d>', '5j')
 nmap('<C-u>', '5k')
-
 
 -- Plugins --
 
@@ -64,9 +63,9 @@ nmap('[w', '<Plug>(coc-diagnostic-prev)')
 
 -- End Coc Plugins config
 
--- NeoTree
-nmap('<C-n>', ':NeoTreeReveal<CR>')
-nmap('<C-m>', ':NeoTreeShow<CR>')
+-- NVIM tree
+nmap('<C-n>', ':NvimTreeFindFile<CR>')
+nmap('<C-m>', ':NvimTreeToggle<CR>')
 
 -- Telescope
 
@@ -86,6 +85,6 @@ nmap('ghs', '<Plug>(GitGutterStageHunk)')
 nmap('ghu', '<Plug>(GitGutterUndoHunk)')
 
 -- Lazygit
-nmap('gg', ':LazyGit<CR>')
-nmap('ggc', ':LazyGitFilter<CR>')
-nmap('ggf', ':LazyGitFilterCurrentFile<CR>')
+nmap('lg', ':LazyGit<CR>')
+nmap('lgc', ':LazyGitFilter<CR>')
+nmap('lgf', ':LazyGitFilterCurrentFile<CR>')

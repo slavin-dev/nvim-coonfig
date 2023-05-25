@@ -10,3 +10,11 @@ vim.api.nvim_create_user_command(
 )
 
 vim.api.nvim_create_user_command("Esfix", "call CocAction('runCommand', 'eslint.executeAutofix')", {})
+
+-- Coc coomands
+vim.api.nvim_create_augroup("CocGroup", {})
+vim.api.nvim_create_autocmd("CursorHold", {
+    group = "CocGroup",
+    command = "silent call CocActionAsync('highlight')",
+    desc = "Highlight symbol under cursor on CursorHold"
+})

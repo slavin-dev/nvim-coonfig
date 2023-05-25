@@ -14,14 +14,14 @@ packer.startup(function(use)
   use { "wbthomason/packer.nvim" }
   use { "catppuccin/nvim", as = "catppuccin" }
   use {
-    "nvim-neo-tree/neo-tree.nvim",
-      branch = "v2.x",
-      requires = {
-        "nvim-lua/plenary.nvim",
-        "nvim-tree/nvim-web-devicons",
-        "MunifTanjim/nui.nvim",
-      }
-    }
+    'nvim-tree/nvim-tree.lua',
+    requires = {
+      'nvim-tree/nvim-web-devicons', -- optional
+    },
+    config = function()
+      require("nvim-tree").setup {}
+    end
+  }
   -- COC plugins begin
   use { 'neoclide/coc.nvim', branch='release' }
   use { 'neoclide/coc-tsserver', run='yarn install --frozen-lockfile' }
@@ -51,4 +51,11 @@ packer.startup(function(use)
         require("telescope").load_extension("lazygit")
     end,
   })
+
+  use {'kevinhwang91/nvim-bqf', ft = 'qf'}
+  use {'junegunn/fzf', run = function()
+      vim.fn['fzf#install']()
+  end
+  }
+  use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
 end)
