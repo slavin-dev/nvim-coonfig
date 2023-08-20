@@ -1,5 +1,6 @@
+vim.cmd('filetype plugin indent on')
+
 vim.cmd [[autocmd BufWritePre * %s/\s\+$//e ]]
-vim.cmd [[autocmd BufWritePost * GitGutter]]
 
 vim.api.nvim_create_user_command(
     'Dels',
@@ -18,3 +19,12 @@ vim.api.nvim_create_autocmd("CursorHold", {
     command = "silent call CocActionAsync('highlight')",
     desc = "Highlight symbol under cursor on CursorHold"
 })
+
+
+vim.api.nvim_create_user_command(
+  'FFF',
+  function()
+    vim.cmd [[verbose set cmdheight=1]]
+  end,
+  {}
+)
