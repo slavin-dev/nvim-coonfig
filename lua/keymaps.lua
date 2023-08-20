@@ -1,10 +1,14 @@
+local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 local M = require('utils.mapping')
 require('utils.code-actions')
+
 
 local xmap= M.xmap
 local nmap = M.nmap
 local nnoremap = M.nnoremap
+local vnoremap = M.vnoremap
 local inoremap = M.inoremap
+local exp_kset = M.exp_kset
 
 -- Leader keys
 vim.g.mapleader = " "
@@ -35,6 +39,8 @@ nmap('<C-u>', '5k')
 -- Plugins --
 
 -- Coc
+--
+exp_kset("i", "<c-e>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]])
 
 -- Coc code actions
 nmap('<leader>i', '<Plug>(coc-codeaction)')
@@ -42,6 +48,7 @@ nmap('<leader>qf', '<Plug>(coc-fix-current)')
 xmap('<leader> a', '<Plug>(coc-codeaction-selected)')
 nmap('<leader> a', '<Plug>(coc-codeaction-selected)')
 nmap('gd', '<Plug>(coc-definition)')
+
 nmap('gy', '<Plug>(coc-type-definition)')
 nmap('gi', '<Plug>(coc-implementation)')
 nmap('gr', '<Plug>(coc-references)')
@@ -61,8 +68,6 @@ nnoremap('<leader>cco', ':CocList outline<CR>')
 nmap(']w', '<Plug>(coc-diagnostic-next)')
 nmap('[w', '<Plug>(coc-diagnostic-prev)')
 
--- End Coc Plugins config
-
 -- NVIM tree
 nmap('<C-n>', ':NvimTreeFindFile<CR>')
 nmap('<C-m>', ':NvimTreeToggle<CR>')
@@ -70,21 +75,39 @@ nmap('<C-m>', ':NvimTreeToggle<CR>')
 -- Telescope
 
 nnoremap('<leader>ff', '<cmd>Telescope find_files<cr>')
-nnoremap('<leader>fs', '<cmd>Telescope live_grep<cr>')
+nnoremap('<leader>rf', '<cmd>Telescope oldfiles<cr>')
+nnoremap('<leader>fs', ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 nnoremap('<leader>fb', '<cmd>Telescope buffers<cr>')
 nnoremap('<leader>p', '<cmd>Telescope git_files<cr>')
 nnoremap('<leader>fgb', '<cmd>Telescope git_branches<cr>')
 nnoremap('<leader>fgc', '<cmd>Telescope git_commits<cr>')
 
--- Git gutter
+nnoremap('<leader>fd', '<cmd>Telescope dir live_grep<CR>')
+nnoremap('<leader>pd', '<cmd>Telescope dir find_files<CR>')
 
+vim.keymap.set("n", "<leader>fw", live_grep_args_shortcuts.grep_word_under_cursor)
+
+-- Neogit
+nnoremap('<leader>g', '<cmd>Neogit<cr>')
+
+-- Diffview
+nnoremap('<leader>do', '<cmd>DiffviewOpen<cr>')
+nnoremap('<leader>fdo', '<cmd>DiffviewFileHistory<cr>')
+nnoremap('<leader>dc', '<cmd>DiffviewClose<cr>')
+
+-- Gitgutter
 nnoremap('<leader>ghc', ':GitGutterLineHighlightsToggle<CR>')
 nmap(']h', '<Plug>(GitGutterNextHunk)')
 nmap('[h', '<Plug>(GitGutterPrevHunk)')
 nmap('ghs', '<Plug>(GitGutterStageHunk)')
 nmap('ghu', '<Plug>(GitGutterUndoHunk)')
 
--- Lazygit
-nmap('lg', ':LazyGit<CR>')
-nmap('lgc', ':LazyGitFilter<CR>')
-nmap('lgf', ':LazyGitFilterCurrentFile<CR>')
+-- BarBar
+nnoremap('<leader>tca', '<cmd>BufferCloseAllButCurrent<CR>')
+nnoremap('<leader>tc', '<cmd>BufferClose<CR>')
+nmap('<leader>tr', '<cmd>BufferRestore<CR>')
+nmap('gt', '<cmd>BufferNext<CR>')
+nmap('gT', '<cmd>BufferPrevious<CR>')
+
+-- Neorg
+nnoremap('<leader>oa', '<cmd>Neorg<CR>')
