@@ -12,7 +12,7 @@ packer.init({
 
 packer.startup(function(use)
   use { "wbthomason/packer.nvim" }
-  use { "catppuccin/nvim", as = "catppuccin" }
+  use { "Mofiqul/dracula.nvim" }
   use {
     'nvim-tree/nvim-tree.lua',
     requires = {
@@ -34,6 +34,7 @@ packer.startup(function(use)
   use { 'fannheyward/coc-styled-components', run='yarn install --frozen-lockfile' }
   use { 'iamcco/coc-diagnostic', run='yarn install --frozen-lockfile' }
   use { 'neoclide/coc-emmet', run='yarn install --frozen-lockfile' }
+  use { 'neoclide/coc-snippets', run='yarn install --frozen-lockfile' }
   -- COC plugins end
 
   use { 'ntpeters/vim-better-whitespace' }
@@ -44,18 +45,46 @@ packer.startup(function(use)
   use { 'vim-airline/vim-airline' }
 
   use { 'airblade/vim-gitgutter' }
+  use { 'tpope/vim-fugitive' }
   use({
     "nvim-telescope/telescope.nvim",
-    requires = { { "nvim-lua/plenary.nvim" }, { "kdheepak/lazygit.nvim" } },
+    requires = { "nvim-lua/plenary.nvim" },
+  })
+  use { 'nvim-telescope/telescope-live-grep-args.nvim' }
+  use({
+    "princejoogie/dir-telescope.nvim",
+    -- telescope.nvim is a required dependency
+    requires = {"nvim-telescope/telescope.nvim"},
     config = function()
-        require("telescope").load_extension("lazygit")
+      require("dir-telescope").setup({
+        -- these are the default options set
+        hidden = true,
+        no_ignore = false,
+        show_preview = true,
+      })
     end,
   })
 
-  use {'kevinhwang91/nvim-bqf', ft = 'qf'}
-  use {'junegunn/fzf', run = function()
+  use { 'kevinhwang91/nvim-bqf', ft = 'qf'}
+  use({
+    'junegunn/fzf', run = function()
       vim.fn['fzf#install']()
-  end
+    end
+  })
+  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+  use { 'alvan/vim-closetag' }
+  use { 'gennaro-tedesco/nvim-peekup' }
+  use { 'NvChad/nvim-colorizer.lua' }
+  -- use { 'Bekaboo/dropbar.nvim' }
+  use { 'lewis6991/gitsigns.nvim' }
+  use { 'romgrk/barbar.nvim' }
+  use { 'sindrets/diffview.nvim' }
+  use {
+    'TimUntersberger/neogit',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'sindrets/diffview.nvim'
+    }
   }
-  use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
+  use { 'nvim-neorg/neorg' }
 end)
