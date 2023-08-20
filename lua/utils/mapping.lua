@@ -22,4 +22,9 @@ function M.tnoremap(lhs, rhs) M.noremap('t', lhs, rhs) end
 function M.exprnnoremap(lhs, rhs) M.exprnoremap('n', lhs, rhs) end
 function M.exprinoremap(lhs, rhs) M.exprnoremap('i', lhs, rhs) end
 
+
+function M.exp_kset(mode, key, exp)
+  vim.keymap.set(mode, key, exp, {silent = true, noremap = true, expr = true, replace_keycodes = false})
+end
+
 return M
